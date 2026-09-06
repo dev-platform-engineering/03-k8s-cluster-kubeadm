@@ -12,6 +12,12 @@
       {% if dns_search | length > 0 %}
       search {{ dns_search | join(' ') }}
       {% endif %}
+  register: resolv_changed
+
+- name: DNS | Pause to let system apply resolv.conf
+  ansible.builtin.pause:
+    seconds: 2
+  when: resolv_changed.changed
 
 - name: DNS | Verify repository hostname resolution
   ansible.builtin.command:
