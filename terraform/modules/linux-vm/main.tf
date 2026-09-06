@@ -9,11 +9,21 @@ resource "vsphere_virtual_machine" "this" {
   num_cpus = var.cpu
   memory   = var.memory
 
-  guest_id  = var.guest_id
-  firmware  = var.firmware
-  scsi_type = var.scsi_type
+  guest_id = var.guest_id
+  firmware = var.firmware
+
+  boot_delay = 3000
+  scsi_type  = var.scsi_type
 
   wait_for_guest_net_timeout = var.wait_for_guest_net_timeout
+
+  lifecycle {
+    prevent_destroy = false
+    ignore_changes = [
+      sync_time_with_host,    # fix true/false host time sync changes
+      clone[0].template_uuid, # ignore updates to the template, so the VM doesn't get recreated by accident
+    ]
+  }
 
   disk {
     label            = var.disk_label
