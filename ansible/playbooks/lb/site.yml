@@ -1,6 +1,6 @@
 ---
 - name: Configure settings for lb ha-proxy cluster
-  hosts: loadbalancers
+  hosts: loadbalancer
   become: true
   roles:
     - role: common
