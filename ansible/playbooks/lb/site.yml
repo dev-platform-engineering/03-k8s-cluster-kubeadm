@@ -1,0 +1,10 @@
+---
+- name: Configure settings for lb ha-proxy cluster
+  hosts: loadbalancers
+  become: true
+  roles:
+    - role: common
+      tags: common
+
+    - role: loadbalancer
+      tags: loadbalancer
