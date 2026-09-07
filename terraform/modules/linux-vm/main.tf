@@ -16,6 +16,8 @@ resource "vsphere_virtual_machine" "this" {
   scsi_type  = var.scsi_type
 
   wait_for_guest_net_timeout = var.wait_for_guest_net_timeout
+  #critical for the wait_for_guest_ip_timeout to work, otherwise it will timeout before the guest network is ready
+  wait_for_guest_ip_timeout = var.wait_for_guest_net_timeout
 
   lifecycle {
     prevent_destroy = false
