@@ -26,3 +26,6 @@ haproxy_bind_address: "0.0.0.0"
 haproxy_bind_port: "{{ kubernetes_api_port }}"
 haproxy_mode: "tcp"
 haproxy_balance_method: "roundrobin"
+
+haproxy_user: "haproxy"
+haproxy_group: "haproxy"
