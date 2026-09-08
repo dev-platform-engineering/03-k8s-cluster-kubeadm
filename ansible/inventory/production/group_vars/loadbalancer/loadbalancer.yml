@@ -15,7 +15,7 @@ kubernetes_api_port: 6443
 loadbalancer_vip: "10.50.20.10"
 
 # Keepalived
-keepalived_interface: "eth0"
+keepalived_interface: "ens192"
 keepalived_router_id: 51
 keepalived_auth_type: "PASS"
 keepalived_auth_password: "{{ vault_keepalived_auth_password }}"
