@@ -26,6 +26,11 @@
       ansible.builtin.include_tasks:
         file: kube_packages.yml
 
+    - name: Kubernetes | Configure containerd registry
+      ansible.builtin.include_tasks:
+        file: registry.yml
+      when: kubernetes_registry_enabled | bool
+
     - name: Validate Kubernetes node
       ansible.builtin.include_tasks:
         file: validate.yml

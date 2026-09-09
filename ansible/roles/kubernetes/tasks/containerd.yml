@@ -57,6 +57,42 @@
         replace: "SystemdCgroup = true"
       notify: Restart containerd
 
+    - name: Kubernetes | Configure containerd registry config path
+      ansible.builtin.replace:
+        path: /etc/containerd/config.toml
+        regexp: 'config_path = ""'
+        replace: 'config_path = "/etc/containerd/certs.d"'
+      notify: Restart containerd
+
+    - name: Kubernetes | Configure containerd sandbox image
+      ansible.builtin.replace:
+        path: /etc/containerd/config.toml
+        regexp: 'sandbox_image = "registry.k8s.io/pause:[^"]+"'
+        replace: 'sandbox_image = "{{ kubernetes_containerd_sandbox_image }}"'
+      notify: Restart containerd
+
+    - name: Kubernetes | Create containerd registry configuration directory
+      ansible.builtin.file:
+        path: /etc/containerd/certs.d/registry.k8s.io
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Kubernetes | Configure registry.k8s.io Nexus mirror
+      ansible.builtin.copy:
+        dest: /etc/containerd/certs.d/registry.k8s.io/hosts.toml
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          server = "https://registry.k8s.io"
+
+          [host."{{ kubernetes_registry_k8s_endpoint }}"]
+            capabilities = ["pull", "resolve"]
+            override_path = true
+      notify: Restart containerd
+
     # -------------------------------------------------------------------------
     # Systemd
     # -------------------------------------------------------------------------

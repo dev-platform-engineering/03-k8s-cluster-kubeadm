@@ -47,3 +47,10 @@ runc_artifact_checksums:
 
 repo_kubernetes_1_30_url: >-
   http://repo-01.infra.platform.internal:8081/repository/kubernetes-1.30
+
+kubernetes_registry_enabled: true
+kubernetes_registry_host: "repo-01.infra.platform.internal:8081"
+kubernetes_registry_k8s_repository: "registry-k8s-io"
+kubernetes_registry_k8s_endpoint: >-
+  http://repo-01.infra.platform.internal:8081/repository/registry-k8s-io
+kubernetes_containerd_sandbox_image: "registry.k8s.io/pause:3.9"
