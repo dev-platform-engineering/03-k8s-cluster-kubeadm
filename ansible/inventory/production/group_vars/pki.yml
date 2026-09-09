@@ -19,7 +19,8 @@ kubernetes_etcd_client_key: "{{ kubernetes_etcd_pki_dir }}/apiserver-etcd-client
 
 # PKI on Ansible controller
 
-controlplane_tls_controller_pki_dir: "{{ ansible_env.HOME }}/.ansible/pki/controlplane"
+controlplane_tls_controller_pki_dir: >-
+  {{ lookup('env', 'HOME') }}/.ansible/pki/controlplane
 controlplane_etcd_client_csr_local: >-
   {{ controlplane_tls_controller_pki_dir }}/{{ inventory_hostname }}/apiserver-etcd-client.csr
 controlplane_etcd_client_cert_local: >-
