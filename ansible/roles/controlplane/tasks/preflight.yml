@@ -1,0 +1,52 @@
+---
+- name: Controlplane | Check kubeadm
+  ansible.builtin.command:
+    cmd: kubeadm version -o short
+  register: controlplane_kubeadm_version
+  changed_when: false
+
+- name: Controlplane | Check kubelet
+  ansible.builtin.command:
+    cmd: kubelet --version
+  register: controlplane_kubelet_version
+  changed_when: false
+
+- name: Controlplane | Check containerd
+  ansible.builtin.systemd:
+    name: containerd
+  register: controlplane_containerd
+  changed_when: false
+
+- name: Controlplane | Verify containerd is running
+  ansible.builtin.assert:
+    that:
+      - controlplane_containerd.status.ActiveState == "active"
+    fail_msg: "containerd is not running"
+
+- name: Controlplane | Check CRI socket
+  ansible.builtin.stat:
+    path: /run/containerd/containerd.sock
+  register: controlplane_cri_socket
+
+- name: Controlplane | Verify CRI socket
+  ansible.builtin.assert:
+    that:
+      - controlplane_cri_socket.stat.exists
+      - controlplane_cri_socket.stat.socket
+    fail_msg: "containerd CRI socket does not exist"
+
+- name: Controlplane | Resolve Kubernetes API endpoint
+  ansible.builtin.command:
+    cmd: >-
+      getent hosts
+      {{ kubernetes_control_plane_endpoint
+         | regex_replace(':6443$', '') }}
+  register: controlplane_api_dns
+  changed_when: false
+
+- name: Controlplane | Resolve etcd endpoints
+  ansible.builtin.command:
+    cmd: "getent hosts {{ item }}"
+  loop: "{{ groups['etcd'] | map('extract', hostvars, 'etcd_fqdn') | list }}"
+  register: controlplane_etcd_dns
+  changed_when: false
