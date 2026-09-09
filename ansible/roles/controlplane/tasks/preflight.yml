@@ -28,6 +28,13 @@
     path: /run/containerd/containerd.sock
   register: controlplane_cri_socket
 
+- name: DEBUG | Посмотреть что внутри stat
+  ansible.builtin.debug:
+    msg:
+      - "Оригинальный путь: {{ kubernetes_cri_socket }}"
+      - "Был ли найден файл?: {{ controlplane_cri_socket.stat.exists | default(false) }}"
+      - "Реальный проверенный путь: {{ controlplane_cri_socket.stat.path | default('НЕ ОПРЕДЕЛЕН') }}"
+
 - name: Controlplane | Get CRI socket status
   ansible.builtin.stat:
     path: "{{ kubernetes_cri_socket | replace('unix://', '') }}"
