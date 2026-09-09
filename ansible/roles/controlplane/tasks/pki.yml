@@ -129,19 +129,11 @@
 # FETCH CSR TO CONTROLLER
 # =============================================================================
 
-- name: PKI | Check local API server etcd client CSR
-  ansible.builtin.stat:
-    path: "{{ controlplane_etcd_client_csr_local }}"
-  register: controlplane_etcd_client_csr_stat
-  delegate_to: localhost
-  become: false
-
 - name: PKI | Fetch API server etcd client CSR
   ansible.builtin.fetch:
-    src: "/etc/kubernetes/pki/etcd/apiserver-etcd-client.csr"
+    src: "{{ kubernetes_etcd_client_csr }}"
     dest: "{{ controlplane_etcd_client_csr_local }}"
     flat: true
-  when: not controlplane_etcd_client_csr_stat.stat.exists
 
 # =============================================================================
 # SIGN CERTIFICATE ON CONTROLLER
@@ -201,3 +193,19 @@
 - name: PKI | Debug API server etcd client certificate information
   ansible.builtin.debug:
     var: controlplane_etcd_client_cert_info.stdout_lines
+
+- name: PKI | Verify API server etcd client certificate matches private key
+  ansible.builtin.shell:
+    cmd: |
+      cert_pub=$(openssl x509 \
+        -in "{{ kubernetes_etcd_client_cert }}" \
+        -pubkey -noout)
+
+      key_pub=$(openssl pkey \
+        -in "{{ kubernetes_etcd_client_key }}" \
+        -pubout)
+
+      test "$cert_pub" = "$key_pub"
+  args:
+    executable: /bin/bash
+  changed_when: false
