@@ -27,6 +27,6 @@ controlplane_etcd_client_cert_local: >-
   {{ controlplane_tls_controller_pki_dir }}/{{ inventory_hostname }}/apiserver-etcd-client.crt
 
 # Existing etcd CA
-
+controlplane_etcd_client_cert_validity_days: 825
 controlplane_etcd_ca_cert_local: "{{ etcd_tls_ca_cert_local }}"
 controlplane_etcd_ca_key_local: "{{ etcd_tls_ca_key_local }}"

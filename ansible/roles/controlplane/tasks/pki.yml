@@ -154,7 +154,7 @@
     ownca_path: "{{ controlplane_etcd_ca_cert_local }}"
     ownca_privatekey_path: "{{ controlplane_etcd_ca_key_local }}"
     provider: ownca
-    ownca_not_after: "+{{ etcd_tls_cert_validity_days }}d"
+    ownca_not_after: "+{{ controlplane_etcd_client_cert_validity_days }}d"
     ownca_digest: sha256
   delegate_to: localhost
   become: false
