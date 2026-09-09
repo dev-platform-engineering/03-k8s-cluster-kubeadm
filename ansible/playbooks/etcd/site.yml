@@ -3,7 +3,8 @@
   hosts: etcd
   become: true
   vars_files:
-    - group_vars/pki.yml
+    - ../../inventory/production/group_vars/pki.yml
+
   roles:
     - role: common
       tags: common
