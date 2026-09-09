@@ -28,11 +28,16 @@
     path: /run/containerd/containerd.sock
   register: controlplane_cri_socket
 
+- name: Controlplane | Get CRI socket status
+  ansible.builtin.stat:
+    path: "{{ kubernetes_cri_socket | replace('unix://', '') }}"
+  register: controlplane_cri_socket
+
 - name: Controlplane | Verify CRI socket
   ansible.builtin.assert:
     that:
       - controlplane_cri_socket.stat.exists
-      - controlplane_cri_socket.stat.socket
+      - controlplane_cri_socket.stat.socket | default(false)
     fail_msg: "containerd CRI socket does not exist"
 
 - name: Controlplane | Resolve Kubernetes API endpoint
