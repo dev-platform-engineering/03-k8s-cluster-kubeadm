@@ -11,10 +11,10 @@
 - name: Controlplane | Configure PKI
   ansible.builtin.include_tasks:
     file: pki.yml
-# - name: Controlplane | Configure kubeadm
-#   ansible.builtin.include_tasks:
-#     file: kubeadm_config.yml
 
+- name: Controlplane | Configure kubeadm
+  ansible.builtin.include_tasks:
+    file: kubeadm_config.yml
 # - name: Controlplane | Bootstrap cluster
 #   ansible.builtin.include_tasks:
 #     file: bootstrap.yml
