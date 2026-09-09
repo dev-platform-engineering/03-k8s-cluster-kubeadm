@@ -90,7 +90,6 @@
 
           [host."{{ kubernetes_registry_k8s_endpoint }}"]
             capabilities = ["pull", "resolve"]
-            override_path = true
       notify: Restart containerd
 
     # -------------------------------------------------------------------------
