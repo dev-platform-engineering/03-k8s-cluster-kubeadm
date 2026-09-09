@@ -1,6 +1,6 @@
 ---
 - name: Configure bootsrap node for Kubernetes cluster
-  hosts: controlplane
+  hosts: control_plane
   become: true
   roles:
     - role: controlplane
