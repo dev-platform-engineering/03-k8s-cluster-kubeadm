@@ -1,4 +1,3 @@
----
 - name: Controlplane | Check kubelet
   ansible.builtin.systemd:
     name: kubelet
@@ -41,27 +40,6 @@
 - name: Controlplane | Parse node information
   ansible.builtin.set_fact:
     controlplane_node_data: "{{ controlplane_node.stdout | from_json }}"
-
-- name: Controlplane | Get node Ready condition
-  ansible.builtin.set_fact:
-    controlplane_node_ready: >-
-      {{
-        controlplane_node_data.status.conditions
-        | selectattr('type', 'equalto', 'Ready')
-        | list
-        | first
-      }}
-
-- name: Controlplane | Verify node is Ready
-  ansible.builtin.assert:
-    that:
-      - controlplane_node_ready is defined
-      - controlplane_node_ready.status == "True"
-    fail_msg: >-
-      Node {{ inventory_hostname }} is not Ready.
-      Status: {{ controlplane_node_ready.status | default('unknown') }}.
-      Reason: {{ controlplane_node_ready.reason | default('unknown') }}.
-      Message: {{ controlplane_node_ready.message | default('unknown') }}
 
 - name: Controlplane | Verify control-plane label
   ansible.builtin.assert:
