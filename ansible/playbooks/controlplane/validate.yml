@@ -8,6 +8,6 @@
 
   roles:
     - role: controlplane
-      tasks_from: validate.yml
+      tasks_from: validate
       tags:
         - controlplane_validate

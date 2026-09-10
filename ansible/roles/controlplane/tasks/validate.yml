@@ -39,5 +39,5 @@
 - name: Controlplane | Verify control-plane label
   ansible.builtin.assert:
     that:
-      - controlplane_node_role.stdout == ""
+      - controlplane_node_role.stdout == "true"
     fail_msg: "Node does not have the control-plane role label"
