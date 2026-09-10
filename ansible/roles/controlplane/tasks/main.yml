@@ -14,7 +14,6 @@
 - name: Controlplane | Bootstrap cluster
   ansible.builtin.include_tasks:
     file: bootstrap.yml
-  when: kubeadm_is_bootstrap
 
 - name: Controlplane | Validate cluster
   ansible.builtin.include_tasks:
