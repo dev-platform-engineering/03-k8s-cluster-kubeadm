@@ -16,6 +16,11 @@
     file: bootstrap.yml
   when: controlplane_operation == "bootstrap"
 
+- name: Controlplane | Generate join credentials
+  ansible.builtin.include_tasks:
+    file: join_credentials.yml
+  when: controlplane_operation == "join"
+
 - name: Controlplane | Join
   ansible.builtin.include_tasks:
     file: join.yml
