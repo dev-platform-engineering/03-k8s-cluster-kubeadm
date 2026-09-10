@@ -1,5 +1,5 @@
 ---
-- name: Configure bootsrap node for Kubernetes cluster
+- name: Configure bootstrap node for Kubernetes cluster
   hosts: kubeadm_bootstrap
   become: true
   vars_files:
