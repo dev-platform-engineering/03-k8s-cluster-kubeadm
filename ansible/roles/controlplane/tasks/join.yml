@@ -7,7 +7,10 @@
 - name: Controlplane | Join control plane
   ansible.builtin.command:
     cmd: >-
-      kubeadm join
-      ...
+      {{ hostvars[kubeadm_bootstrap_host].controlplane_join_command.stdout }}
       --control-plane
+      --certificate-key {{ hostvars[kubeadm_bootstrap_host].controlplane_certificate_key }}
+      --config /etc/kubernetes/kubeadm-config.yaml
   when: not controlplane_kubelet_conf.stat.exists
+  register: controlplane_kubeadm_join
+  changed_when: true
