@@ -1,0 +1,13 @@
+---
+- name: Validate Kubernetes control plane
+  hosts: kubeadm_control_plane
+  become: true
+
+  vars_files:
+    - ../../inventory/production/group_vars/pki.yml
+
+  roles:
+    - role: controlplane
+      tasks_from: validate.yml
+      tags:
+        - controlplane_validate

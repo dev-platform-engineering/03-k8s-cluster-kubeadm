@@ -11,10 +11,12 @@
   ansible.builtin.include_tasks:
     file: kubeadm_config.yml
 
-- name: Controlplane | Bootstrap cluster
+- name: Controlplane | Bootstrap
   ansible.builtin.include_tasks:
     file: bootstrap.yml
+  when: controlplane_operation == "bootstrap"
 
-- name: Controlplane | Validate cluster
+- name: Controlplane | Join
   ansible.builtin.include_tasks:
-    file: validate.yml
+    file: join.yml
+  when: controlplane_operation == "join"
