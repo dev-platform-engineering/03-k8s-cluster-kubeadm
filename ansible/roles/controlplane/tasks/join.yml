@@ -10,4 +10,4 @@
   when: not controlplane_kubelet_conf.stat.exists
   register: controlplane_kubeadm_join
   changed_when: true
-  no_log: true
+  #no_log: true
