@@ -1,6 +1,6 @@
 ---
 - name: Configure bootsrap node for Kubernetes cluster
-  hosts: control_plane
+  hosts: kubeadm_bootstrap
   become: true
   vars_files:
     - ../../inventory/production/group_vars/pki.yml

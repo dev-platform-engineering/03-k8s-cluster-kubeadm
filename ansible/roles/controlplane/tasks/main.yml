@@ -1,9 +1,4 @@
 ---
-- name: Controlplane | Determine bootstrap node
-  ansible.builtin.set_fact:
-    kubeadm_is_bootstrap: >-
-      {{ inventory_hostname == kubeadm_bootstrap_host }}
-
 - name: Controlplane | Preflight
   ansible.builtin.include_tasks:
     file: preflight.yml
@@ -20,11 +15,7 @@
   ansible.builtin.include_tasks:
     file: bootstrap.yml
   when: kubeadm_is_bootstrap
-# - name: Controlplane | Join cluster
-#   ansible.builtin.include_tasks:
-#     file: join.yml
-#   when: not kubeadm_is_bootstrap
 
-# - name: Controlplane | Validate cluster
-#   ansible.builtin.include_tasks:
-#     file: validate.yml
+- name: Controlplane | Validate cluster
+  ansible.builtin.include_tasks:
+    file: validate.yml
