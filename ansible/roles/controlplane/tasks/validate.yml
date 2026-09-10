@@ -49,13 +49,15 @@
         (
           controlplane_node_data.status.conditions
           | selectattr('type', 'equalto', 'Ready')
-          | map(attribute='status')
+          | list
           | first
-        ) == "True"
+        ).status == "True"
     fail_msg: "Node {{ inventory_hostname }} is not Ready"
 
 - name: Controlplane | Verify control-plane label
   ansible.builtin.assert:
     that:
       - "'node-role.kubernetes.io/control-plane' in controlplane_node_data.metadata.labels"
-    fail_msg: "Node {{ inventory_hostname }} does not have the control-plane role label"
+    fail_msg: >-
+      Node {{ inventory_hostname }} does not have the
+      control-plane role label
