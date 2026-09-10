@@ -19,10 +19,12 @@
       get --raw='/readyz'
   register: controlplane_api_ready
   changed_when: false
+  failed_when: false
 
 - name: Controlplane | Verify Kubernetes API is ready
   ansible.builtin.assert:
     that:
+      - controlplane_api_ready.rc == 0
       - controlplane_api_ready.stdout | trim == "ok"
     fail_msg: "Kubernetes API server is not ready"
 
@@ -32,12 +34,28 @@
       kubectl
       --kubeconfig=/etc/kubernetes/admin.conf
       get node {{ inventory_hostname }}
-      -o jsonpath='{.metadata.labels.node-role\.kubernetes\.io/control-plane}'
-  register: controlplane_node_role
+      -o json
+  register: controlplane_node
   changed_when: false
+
+- name: Controlplane | Parse node information
+  ansible.builtin.set_fact:
+    controlplane_node_data: "{{ controlplane_node.stdout | from_json }}"
+
+- name: Controlplane | Verify node is Ready
+  ansible.builtin.assert:
+    that:
+      - >-
+        (
+          controlplane_node_data.status.conditions
+          | selectattr('type', 'equalto', 'Ready')
+          | map(attribute='status')
+          | first
+        ) == "True"
+    fail_msg: "Node {{ inventory_hostname }} is not Ready"
 
 - name: Controlplane | Verify control-plane label
   ansible.builtin.assert:
     that:
-      - controlplane_node_role.stdout == "true"
-    fail_msg: "Node does not have the control-plane role label"
+      - "'node-role.kubernetes.io/control-plane' in controlplane_node_data.metadata.labels"
+    fail_msg: "Node {{ inventory_hostname }} does not have the control-plane role label"
